@@ -1,9 +1,8 @@
 const startButtonEL = document.querySelector("#start-btn");
 const questionContainerEl = document.querySelector("#box");
 const questionContainer = document.querySelector("#answers");
-startButtonEL.addEventListener("click", startGame);
-
 const nextButtonEl = document.querySelector("#next-btn");
+startButtonEL.addEventListener("click", startGame);
 
 const students = [
   {
@@ -181,18 +180,33 @@ function shuffleArray(array) {
 }
 
 let score = 0;
+let question = 1;
+let student;
 
+if (questions.length == 0) {
+  for (let i = 0; i < students.length; i++) {
+    questions.push(i); // [0, 1, 2, ..., 38]
+  }
+  score = 0;
+  question = 1;
+  student = undefined;
+
+  startButtonEL.classList.remove("hide");
+  questionContainerEl.classList.add("hide");
+  shuffledArray = [...students];
+  shuffleArray(shuffledArray);
+  shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+  setNextQuestion();
+}
 function startGame() {
   startButtonEL.classList.add("hide");
 
   questionContainerEl.classList.remove("hide");
 }
 
-function setNextQuestion() {}
-
 // for loop that will generate 4 button elements, each with its own unique id(1-4).
 for (let qid = 1; qid < 5; qid++) {
-  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-4"></button>`;
+  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-4 btn-answers  justify-content-center"></button>`;
 }
 
 let shuffledArray = [...students]; // copying students array into shuffledArray.
@@ -204,45 +218,52 @@ console.log("shuffledArray after shuffle: ", shuffledArray);
 shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
 console.log(questions);
 
-let questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
-console.log("questionId is: ", questionId);
+function setNextQuestion() {
+  console.log(`Question ${question} out of 39`);
+  let questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
+  console.log("questionId is: ", questionId);
 
-let student = students[questionId]; // Giving student variable the object from students array @ index "questionId".
-console.log(student.name);
-/* student = {
-      name: "Hanna Håkanson",
-      image: "assets/images/students/hanna-hakanson.jpg",
-    },
-    */
-let answers = shuffledArray.slice(0, 3); // Removing objects @ position 0, remove 3 objects.
-console.log(shuffledArray);
-console.log(answers);
+  student = students[questionId]; // Giving student variable the object from students array @ index "questionId".
+  console.log(student.name);
+  /* student = {
+            name: "Hanna Håkanson",
+            image: "assets/images/students/hanna-hakanson.jpg",
+          },
+          */
+  let answers = shuffledArray.slice(0, 3); // Removing objects @ position 0, remove 3 objects.
+  shuffleArray(shuffledArray);
+  console.log("shuffledArray: ", shuffledArray);
+  console.log("answers: ", answers);
 
-// Checking if spliced (removed from the array) objects includes student which is the correct answer, if true then answers will splice
-if (answers.includes(student)) {
-  console.log("We are in if ");
-  answers = shuffledArray.slice(0, 4);
-} else {
-  console.log("We are in else ");
-  answers = [student, ...answers];
+  if (answers.includes(student)) {
+    // Checking if spliced (removed from the array) objects includes student which is the correct answer, if true then answers will splice
+    console.log("We are in if ");
+    answers = shuffledArray.slice(0, 4);
+  } else {
+    console.log("We are in else ");
+    answers = [student, ...answers];
+  }
+  shuffleArray(answers);
+  console.log("shuffledArray: ", shuffledArray);
+
+  const questionEl = document.querySelector("#question");
+  questionEl.setAttribute("src", student.image);
+
+  const buttonIds = ["#btn-1", "#btn-2", "#btn-3", "#btn-4"];
+
+  for (i = 0; i < 4; i++) {
+    const answerEl = document.querySelector(buttonIds[i]);
+    answerEl.innerHTML = answers[i].name;
+  }
 }
-shuffleArray(answers);
-console.log(shuffledArray);
 
-const questionEl = document.querySelector("#question");
-questionEl.setAttribute("src", student.image);
-
-const buttonIds = ["#btn-1", "#btn-2", "#btn-3", "#btn-4"];
-
-for (i = 0; i < 4; i++) {
-  const answerEl = document.querySelector(buttonIds[i]);
-  answerEl.innerHTML += answers[i].name;
-}
-
+setNextQuestion();
 questionContainer.addEventListener("click", (e) => {
-  console.log(`You clicked on a ${e.target.tagName} element`, e.target);
   if (e.target.tagName === "BUTTON" && e.target.innerText == student.name) {
     score++;
-    console.log("score = ", score);
   }
+  question++;
+
+  console.log("score = ", score);
+  setNextQuestion();
 });
