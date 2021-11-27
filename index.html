@@ -5,6 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz-app</title>
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@100&display=swap"
+      rel="stylesheet"
+    />
     <!-- Bootstrap 5.1 -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -15,25 +22,30 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container h-100 mt-5 ">
-        <div class="row h-100 ">
-            <div id="box" class="hide">
-                <div class="justify-content-center">
-                    <img id="question" src="assets\images\students\alexander-kocman.jpg" alt="" class="img-fluid rounded mx-auto d-block ">
-                </div>
-                <div id="answers" class="row justify-content-center ">
-                  
-                </div>
-            </div>
+    <div class="container h-100">
+      <h1 class="text-center">
+        Q &nbsp&nbsp U &nbsp&nbsp I &nbsp&nbsp Z &nbsp&nbsp M &nbsp&nbsp A
+        &nbsp&nbsp T &nbsp&nbsp E
+      </h1>
+      <h2 id="game-info"></h2>
+      <h1 id="scoreboard" class="text-center"></h1>
+      <div class="h-100">
+        <div id="box" class="hide">
+          <div class="justify-content-center">
+            <img
+              id="question"
+              src=""
+              alt=""
+              class="img-fluid mx-auto rounded"
+            />
+            <div id="answers" class="row justify-content-center"></div>
+          </div>
         </div>
-    </div>
-
-      <div class="tools d-flex justify-content-center align-items-center">
-        <button id="start-btn" class="btn btn-primary mt-5">START</button>
-        <button id="next-btn" class="btn btn-primary hide"></button>
+        <div class="tools d-flex justify-content-center">
+          <button id="start-btn" class="btn btn-primary mt-5">START</button>
+        </div>
       </div>
     </div>
-
     <script src="script.js"></script>
   </body>
 </html>

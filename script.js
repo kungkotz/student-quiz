@@ -2,7 +2,12 @@ const startButtonEL = document.querySelector("#start-btn");
 const questionContainerEl = document.querySelector("#box");
 const questionContainer = document.querySelector("#answers");
 const nextButtonEl = document.querySelector("#next-btn");
+const scoreBoardEl = document.querySelector("#scoreboard");
+const gameInfo = document.querySelector("#game-info");
+const frontPage = document.querySelector("#front-page");
 startButtonEL.addEventListener("click", startGame);
+
+gameInfo.innerText = "How well do you know you're classmates?";
 
 const students = [
   {
@@ -182,34 +187,23 @@ function shuffleArray(array) {
 let score = 0;
 let question = 1;
 let student;
+let shuffledArray;
+let questionId;
 
-if (questions.length == 0) {
-  for (let i = 0; i < students.length; i++) {
-    questions.push(i); // [0, 1, 2, ..., 38]
-  }
-  score = 0;
-  question = 1;
-  student = undefined;
-
-  startButtonEL.classList.remove("hide");
-  questionContainerEl.classList.add("hide");
-  shuffledArray = [...students];
-  shuffleArray(shuffledArray);
-  shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
-  setNextQuestion();
-}
 function startGame() {
   startButtonEL.classList.add("hide");
 
   questionContainerEl.classList.remove("hide");
+  gameInfo.classList.add("hide");
+  scoreBoardEl.innerText = `0 out of 0`;
 }
 
 // for loop that will generate 4 button elements, each with its own unique id(1-4).
 for (let qid = 1; qid < 5; qid++) {
-  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-4 btn-answers  justify-content-center"></button>`;
+  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-11 btn-answers "></button>`;
 }
 
-let shuffledArray = [...students]; // copying students array into shuffledArray.
+shuffledArray = [...students]; // copying students array into shuffledArray.
 console.log("shuffledArray before shuffle: ", shuffledArray);
 
 shuffleArray(shuffledArray); // Shuffling shuffledarray.
@@ -219,8 +213,7 @@ shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
 console.log(questions);
 
 function setNextQuestion() {
-  console.log(`Question ${question} out of 39`);
-  let questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
+  questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
   console.log("questionId is: ", questionId);
 
   student = students[questionId]; // Giving student variable the object from students array @ index "questionId".
@@ -256,14 +249,38 @@ function setNextQuestion() {
     answerEl.innerHTML = answers[i].name;
   }
 }
+questionContainer.addEventListener("click", (e) => {
+  if (e.target.tagName === "BUTTON") {
+    scoreBoardEl.innerText = `${score} out of ${question}`;
+  }
+});
 
 setNextQuestion();
+
 questionContainer.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON" && e.target.innerText == student.name) {
     score++;
   }
+
   question++;
 
   console.log("score = ", score);
+
+  if (questions.length == 0) {
+    for (let i = 0; i < students.length; i++) {
+      questions.push(i); // [0, 1, 2, ..., 38]
+    }
+    scoreBoardEl.classList.add("hide");
+    startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
+    score = 0;
+    question = 1;
+    student = undefined;
+
+    startButtonEL.classList.remove("hide");
+    questionContainerEl.classList.add("hide");
+    shuffledArray = [...students];
+    shuffleArray(shuffledArray);
+    shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+  }
   setNextQuestion();
 });
