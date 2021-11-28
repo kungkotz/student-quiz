@@ -201,13 +201,11 @@ function setNextQuestion() {
   questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
   student = students[questionId]; // Giving student variable the object from students array @ index "questionId".
   let answers = shuffledArray.slice(0, 3); // Removing objects @ position 0, remove 3 objects.
-  console.log(student);
+
   if (answers.includes(student)) {
-    console.log("we are in if");
     // Checking if spliced (removed from the array) objects includes student which is the correct answer, if true then answers will splice
     answers = shuffledArray.slice(0, 4);
   } else {
-    console.log("We are in else", typeof answers, answers);
     answers = [student, ...answers];
   }
   shuffleArray(shuffledArray);
