@@ -6,8 +6,10 @@ const scoreBoardEl = document.querySelector("#scoreboard");
 const gameInfo = document.querySelector("#game-info");
 const frontPage = document.querySelector("#front-page");
 
+// Honest to god, idk where I should put this?
 gameInfo.innerText = "How well do you know you're classmates?";
 
+// Default students array that will not be modifed.
 const students = [
   {
     name: "Adi Dzocaj",
@@ -189,7 +191,7 @@ let questionId;
 
 // for loop that will generate 4 button elements, each with its own unique id(1-4).
 for (let qid = 1; qid < 5; qid++) {
-  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-11 col-lg-8 btn-answers "></button>`;
+  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-11 col-lg-4 mt-lg-3 py-lg-3  w-100 btn-answers "></button>`;
 }
 
 function prepareQuestions() {
@@ -229,7 +231,20 @@ function startGame() {
   setNextQuestion();
 }
 
+function startNewGame() {
+  startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
+  score = 0;
+  question = 1;
+  student = undefined;
+  startButtonEL.classList.remove("hide");
+  questionContainerEl.classList.add("hide");
+  shuffledArray = [...students];
+  shuffleArray(shuffledArray);
+  shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+}
+
 questionContainer.addEventListener("click", (e) => {
+  // If answer is correct, score will increase, update scoreboard, if questions array is empty, fill it up with numbers matching the size of students array.
   if (e.target.tagName === "BUTTON" && e.target.innerText == student.name) {
     score++;
     question++;
@@ -239,18 +254,11 @@ questionContainer.addEventListener("click", (e) => {
         questions.push(i); // [0, 1, 2, ..., 38]
       }
 
-      startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
-      score = 0;
-      question = 1;
-      student = undefined;
-      startButtonEL.classList.remove("hide");
-      questionContainerEl.classList.add("hide");
-      shuffledArray = [...students];
-      shuffleArray(shuffledArray);
-      shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+      startNewGame();
     }
 
     setNextQuestion();
+    // If answer is not correct, increase question counter, update scoreboard, if questions array is empty fill it up with numbers matching the size of students array.
   } else if (e.target.tagName === "BUTTON") {
     question++;
     scoreBoardEl.innerText = `${score} out of ${question}`;
@@ -259,15 +267,7 @@ questionContainer.addEventListener("click", (e) => {
         questions.push(i); // [0, 1, 2, ..., 38]
       }
 
-      startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
-      score = 0;
-      question = 1;
-      student = undefined;
-      startButtonEL.classList.remove("hide");
-      questionContainerEl.classList.add("hide");
-      shuffledArray = [...students];
-      shuffleArray(shuffledArray);
-      shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+      startNewGame();
     }
     setNextQuestion();
   }
