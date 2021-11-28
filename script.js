@@ -6,9 +6,7 @@ const scoreBoardEl = document.querySelector("#scoreboard");
 const gameInfo = document.querySelector("#game-info");
 const frontPage = document.querySelector("#front-page");
 startButtonEL.addEventListener("click", startGame);
-
 gameInfo.innerText = "How well do you know you're classmates?";
-
 const students = [
   {
     name: "Adi Dzocaj",
@@ -167,15 +165,11 @@ const students = [
     image: "assets/images/students/wiktoria-dobrzewinska.jpg",
   },
 ];
-
 let questions = []; // Creating an  empty array.
-
 // Adding indexes to questions array matching the length of students array.
 for (let i = 0; i < students.length; i++) {
   questions.push(i); // [0, 1, 2, ..., 38]
 }
-console.log(questions);
-
 // Code to shuffle an array.
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -183,67 +177,47 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
 let score = 0;
 let question = 1;
 let student;
 let shuffledArray;
 let questionId;
-
 function startGame() {
+  score = 0;
+  question = 1;
   startButtonEL.classList.add("hide");
-
   questionContainerEl.classList.remove("hide");
   gameInfo.classList.add("hide");
-  scoreBoardEl.innerText = `0 out of 0`;
+  scoreBoardEl.innerText = `${score} out of ${question}`;
 }
-
 // for loop that will generate 4 button elements, each with its own unique id(1-4).
 for (let qid = 1; qid < 5; qid++) {
-  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-11 btn-answers "></button>`;
+  questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-11 col-lg-8 btn-answers "></button>`;
 }
 
-shuffledArray = [...students]; // copying students array into shuffledArray.
-console.log("shuffledArray before shuffle: ", shuffledArray);
+function prepareQuestions() {
+  shuffledArray = [...students]; // copying students array into shuffledArray.
+  shuffleArray(shuffledArray); // Shuffling shuffledarray.
+  shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+}
 
-shuffleArray(shuffledArray); // Shuffling shuffledarray.
-console.log("shuffledArray after shuffle: ", shuffledArray);
-
-shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
-console.log(questions);
+prepareQuestions();
 
 function setNextQuestion() {
   questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
-  console.log("questionId is: ", questionId);
-
   student = students[questionId]; // Giving student variable the object from students array @ index "questionId".
-  console.log(student.name);
-  /* student = {
-            name: "Hanna Håkanson",
-            image: "assets/images/students/hanna-hakanson.jpg",
-          },
-          */
   let answers = shuffledArray.slice(0, 3); // Removing objects @ position 0, remove 3 objects.
   shuffleArray(shuffledArray);
-  console.log("shuffledArray: ", shuffledArray);
-  console.log("answers: ", answers);
-
   if (answers.includes(student)) {
     // Checking if spliced (removed from the array) objects includes student which is the correct answer, if true then answers will splice
-    console.log("We are in if ");
     answers = shuffledArray.slice(0, 4);
   } else {
-    console.log("We are in else ");
     answers = [student, ...answers];
   }
   shuffleArray(answers);
-  console.log("shuffledArray: ", shuffledArray);
-
   const questionEl = document.querySelector("#question");
   questionEl.setAttribute("src", student.image);
-
   const buttonIds = ["#btn-1", "#btn-2", "#btn-3", "#btn-4"];
-
   for (i = 0; i < 4; i++) {
     const answerEl = document.querySelector(buttonIds[i]);
     answerEl.innerHTML = answers[i].name;
@@ -254,28 +228,21 @@ questionContainer.addEventListener("click", (e) => {
     scoreBoardEl.innerText = `${score} out of ${question}`;
   }
 });
-
 setNextQuestion();
-
 questionContainer.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON" && e.target.innerText == student.name) {
     score++;
   }
-
   question++;
-
-  console.log("score = ", score);
-
   if (questions.length == 0) {
     for (let i = 0; i < students.length; i++) {
       questions.push(i); // [0, 1, 2, ..., 38]
     }
-    scoreBoardEl.classList.add("hide");
+
     startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
     score = 0;
     question = 1;
     student = undefined;
-
     startButtonEL.classList.remove("hide");
     questionContainerEl.classList.add("hide");
     shuffledArray = [...students];
