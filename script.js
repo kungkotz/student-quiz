@@ -5,8 +5,9 @@ const nextButtonEl = document.querySelector("#next-btn");
 const scoreBoardEl = document.querySelector("#scoreboard");
 const gameInfo = document.querySelector("#game-info");
 const frontPage = document.querySelector("#front-page");
-startButtonEL.addEventListener("click", startGame);
+
 gameInfo.innerText = "How well do you know you're classmates?";
+
 const students = [
   {
     name: "Adi Dzocaj",
@@ -165,11 +166,13 @@ const students = [
     image: "assets/images/students/wiktoria-dobrzewinska.jpg",
   },
 ];
+
 let questions = []; // Creating an  empty array.
 // Adding indexes to questions array matching the length of students array.
 for (let i = 0; i < students.length; i++) {
   questions.push(i); // [0, 1, 2, ..., 38]
 }
+
 // Code to shuffle an array.
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -177,19 +180,13 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
 let score = 0;
 let question = 1;
 let student;
 let shuffledArray;
 let questionId;
-function startGame() {
-  score = 0;
-  question = 1;
-  startButtonEL.classList.add("hide");
-  questionContainerEl.classList.remove("hide");
-  gameInfo.classList.add("hide");
-  scoreBoardEl.innerText = `${score} out of ${question}`;
-}
+
 // for loop that will generate 4 button elements, each with its own unique id(1-4).
 for (let qid = 1; qid < 5; qid++) {
   questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-11 col-lg-8 btn-answers "></button>`;
@@ -200,8 +197,6 @@ function prepareQuestions() {
   shuffleArray(shuffledArray); // Shuffling shuffledarray.
   shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
 }
-
-prepareQuestions();
 
 function setNextQuestion() {
   questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
@@ -223,31 +218,42 @@ function setNextQuestion() {
     answerEl.innerHTML = answers[i].name;
   }
 }
-questionContainer.addEventListener("click", (e) => {
-  if (e.target.tagName === "BUTTON") {
-    scoreBoardEl.innerText = `${score} out of ${question}`;
-  }
-});
-setNextQuestion();
+function startGame() {
+  score = 0;
+  question = 1;
+  startButtonEL.classList.add("hide");
+  gameInfo.classList.add("hide");
+  questionContainerEl.classList.remove("hide");
+  scoreBoardEl.innerText = `${score} out of ${question}`;
+  prepareQuestions();
+  setNextQuestion();
+}
+
 questionContainer.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON" && e.target.innerText == student.name) {
     score++;
-  }
-  question++;
-  if (questions.length == 0) {
-    for (let i = 0; i < students.length; i++) {
-      questions.push(i); // [0, 1, 2, ..., 38]
-    }
+    question++;
+    scoreBoardEl.innerText = `${score} out of ${question}`;
+    setNextQuestion();
+  } else if (e.target.tagName === "BUTTON") {
+    scoreBoardEl.innerText = `${score} out of ${question}`;
+    question++;
+    if (questions.length == 0) {
+      for (let i = 0; i < students.length; i++) {
+        questions.push(i); // [0, 1, 2, ..., 38]
+      }
 
-    startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
-    score = 0;
-    question = 1;
-    student = undefined;
-    startButtonEL.classList.remove("hide");
-    questionContainerEl.classList.add("hide");
-    shuffledArray = [...students];
-    shuffleArray(shuffledArray);
-    shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+      startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
+      score = 0;
+      question = 1;
+      student = undefined;
+      startButtonEL.classList.remove("hide");
+      questionContainerEl.classList.add("hide");
+      shuffledArray = [...students];
+      shuffleArray(shuffledArray);
+      shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+    }
+    setNextQuestion();
   }
-  setNextQuestion();
 });
+startButtonEL.addEventListener("click", startGame);
