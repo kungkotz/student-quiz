@@ -197,18 +197,20 @@ function prepareQuestions() {
   shuffleArray(shuffledArray); // Shuffling shuffledarray.
   shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
 }
-
 function setNextQuestion() {
   questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
   student = students[questionId]; // Giving student variable the object from students array @ index "questionId".
   let answers = shuffledArray.slice(0, 3); // Removing objects @ position 0, remove 3 objects.
-  shuffleArray(shuffledArray);
+  console.log(student);
   if (answers.includes(student)) {
+    console.log("we are in if");
     // Checking if spliced (removed from the array) objects includes student which is the correct answer, if true then answers will splice
     answers = shuffledArray.slice(0, 4);
   } else {
+    console.log("We are in else", typeof answers, answers);
     answers = [student, ...answers];
   }
+  shuffleArray(shuffledArray);
   shuffleArray(answers);
   const questionEl = document.querySelector("#question");
   questionEl.setAttribute("src", student.image);
@@ -234,10 +236,26 @@ questionContainer.addEventListener("click", (e) => {
     score++;
     question++;
     scoreBoardEl.innerText = `${score} out of ${question}`;
+    if (questions.length == 0) {
+      for (let i = 0; i < students.length; i++) {
+        questions.push(i); // [0, 1, 2, ..., 38]
+      }
+
+      startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
+      score = 0;
+      question = 1;
+      student = undefined;
+      startButtonEL.classList.remove("hide");
+      questionContainerEl.classList.add("hide");
+      shuffledArray = [...students];
+      shuffleArray(shuffledArray);
+      shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
+    }
+
     setNextQuestion();
   } else if (e.target.tagName === "BUTTON") {
-    scoreBoardEl.innerText = `${score} out of ${question}`;
     question++;
+    scoreBoardEl.innerText = `${score} out of ${question}`;
     if (questions.length == 0) {
       for (let i = 0; i < students.length; i++) {
         questions.push(i); // [0, 1, 2, ..., 38]
