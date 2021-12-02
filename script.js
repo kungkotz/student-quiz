@@ -194,12 +194,12 @@ for (let qid = 1; qid < 5; qid++) {
   questionContainer.innerHTML += `<button id="btn-${qid}" class="btn btn-primary m-1 col-11 col-lg-4 mt-lg-3 py-lg-3  w-100 btn-answers "></button>`;
 }
 
-function prepareQuestions() {
+const prepareQuestions = function () {
   shuffledArray = [...students]; // copying students array into shuffledArray.
   shuffleArray(shuffledArray); // Shuffling shuffledarray.
   shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
-}
-function setNextQuestion() {
+};
+const setNextQuestion = function () {
   questionId = questions.pop(); // removing the first element from questions array and declaring it into variable questionId.
   student = students[questionId]; // Giving student variable the object from students array @ index "questionId".
   let answers = shuffledArray.slice(0, 3); // Removing objects @ position 0, remove 3 objects.
@@ -219,8 +219,8 @@ function setNextQuestion() {
     const answerEl = document.querySelector(buttonIds[i]);
     answerEl.innerHTML = answers[i].name;
   }
-}
-function startGame() {
+};
+const startGame = function () {
   score = 0;
   question = 1;
   startButtonEL.classList.add("hide");
@@ -229,9 +229,9 @@ function startGame() {
   scoreBoardEl.innerText = `${score} out of ${question}`;
   prepareQuestions();
   setNextQuestion();
-}
+};
 
-function startNewGame() {
+const startNewGame = function () {
   startButtonEL.innerText = `You scored ${score} out of ${questions.length} points. Press to try again.`;
   score = 0;
   question = 1;
@@ -241,7 +241,7 @@ function startNewGame() {
   shuffledArray = [...students];
   shuffleArray(shuffledArray);
   shuffleArray(questions); // Shuffling questions array, (was [0, 1, 2, ... 39]).
-}
+};
 
 questionContainer.addEventListener("click", (e) => {
   // If answer is correct, score will increase, update scoreboard, if questions array is empty, fill it up with numbers matching the size of students array.
